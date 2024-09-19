@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Campaign - Donor Connect</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            background: url('https://source.unsplash.com/random/1920x1080?nature') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .blur-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(10px);
+            z-index: -1;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(53, 66, 74, 0.8);
+            color: #ffffff;
+            padding: 1rem 0;
+            border-bottom: #e8491d 3px solid;
+            transition: all 0.3s ease;
+        }
+
+        header:hover {
+            background: rgba(53, 66, 74, 1);
+        }
+
+        header a {
+            color: #ffffff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        header li {
+            display: inline;
+            padding: 0 20px;
+        }
+
+        header #branding {
+            float: left;
+        }
+
+        header #branding h1 {
+            margin: 0;
+        }
+
+        header nav {
+            float: right;
+            margin-top: 10px;
+        }
+
+        header .highlight, header .current a {
+            color: #e8491d;
+            font-weight: bold;
+        }
+
+        header a:hover {
+            color: #e8491d;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1 0 auto;
+            padding: 2rem 0;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Form Styles */
+        form {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="date"],
+        .form-group input[type="file"],
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #e8491d;
+            box-shadow: 0 0 0 2px rgba(232, 73, 29, 0.2);
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #e8491d;
+            color: #ffffff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: #c73d16;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #imagePreview {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Footer */
+        footer {
+            padding: 20px;
+            color: #ffffff;
+            background-color: rgba(232, 73, 29, 0.8);
+            text-align: center;
+        }
+
+        /* Media Queries */
+        @media(max-width: 768px) {
+            header #branding,
+            header nav,
+            header nav li {
+                float: none;
+                text-align: center;
+                width: 100%;
+            }
+
+            header {
+                padding-bottom: 20px;
+            }
+
+            .container {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="blur-overlay"></div>
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1><span class="highlight">Donor</span> Connect Admin</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="admin.html">Dashboard</a></li>
+                    <li class="current"><a href="admin-campaigns.html">Campaigns</a></li>
+                    <li><a href="admin-reports.html">Reports</a></li>
+                    <li><a href="index.html">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h2>Create New Campaign</h2>
+            <form id="newCampaignForm">
+                <div class="form-group">
+                    <label for="campaignTitle">Campaign Title</label>
+                    <input type="text" id="campaignTitle" name="campaignTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="campaignDescription">Campaign Description</label>
+                    <textarea id="campaignDescription" name="campaignDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="campaignGoal">Funding Goal ($)</label>
+                    <input type="number" id="campaignGoal" name="campaignGoal" min="1" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="campaignImage">Campaign Image</label>
+                    <input type="file" id="campaignImage" name="campaignImage" accept="image/*" required>
+                    <img id="imagePreview" src="#" alt="Image preview" />
+                </div>
+                <div class="form-group">
+                    <label for="campaignObjective">Campaign Objective</label>
+                    <textarea id="campaignObjective" name="campaignObjective" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="campaignStartDate">Start Date</label>
+                    <input type="date" id="campaignStartDate" name="campaignStartDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="campaignEndDate">End Date</label>
+                    <input type="date" id="campaignEndDate" name="campaignEndDate" required>
+                </div>
+                <button type="submit" class="btn">Create Campaign</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>Donor Connect &copy; 2024</p>
+    </footer>
+
+    <script>
+         document.getElementById('campaignImage').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const img = document.getElementById('imagePreview');
+            img.src = event.target.result;
+            img.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+    });
+
+    document.getElementById('newCampaignForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const campaignData = {
+            id: Date.now(),
+            title: formData.get('campaignTitle'),
+            description: formData.get('campaignDescription'),
+            goalAmount: parseFloat(formData.get('campaignGoal')),
+            currentAmount: 0,
+            posterUrl: document.getElementById('imagePreview').src,
+            objective: formData.get('campaignObjective'),
+            achievements: [],
+            startDate: formData.get('campaignStartDate'),
+            endDate: formData.get('campaignEndDate')
+        };
+        
+        let campaigns = JSON.parse(localStorage.getItem('campaigns')) || [];
+        campaigns.push(campaignData);
+        localStorage.setItem('campaigns', JSON.stringify(campaigns));
+        
+        alert('Campaign created successfully!');
+        this.reset();
+        document.getElementById('imagePreview').style.display = 'none';
+    });
+        // Add some simple animations
+        document.querySelectorAll('input, textarea').forEach(element => {
+            element.addEventListener('focus', function() {
+                this.style.transform = 'scale(1.02)';
+            });
+            element.addEventListener('blur', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+
+</html>

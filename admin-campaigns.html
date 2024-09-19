@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Campaigns - Donor Connect</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            background: #35424a;
+            color: #ffffff;
+            padding: 1rem 0;
+            border-bottom: #e8491d 3px solid;
+        }
+
+        header a {
+            color: #ffffff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+
+        header li {
+            display: inline;
+            padding: 0 20px;
+        }
+
+        header #branding {
+            float: left;
+        }
+
+        header #branding h1 {
+            margin: 0;
+        }
+
+        header nav {
+            float: right;
+            margin-top: 10px;
+        }
+
+        header .highlight,
+        header .current a {
+            color: #e8491d;
+            font-weight: bold;
+        }
+
+        header a:hover {
+            color: #cccccc;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1 0 auto;
+            padding: 2rem 0;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* Campaign Table */
+        .campaign-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        .campaign-table th,
+        .campaign-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .campaign-table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        .campaign-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .status-inactive {
+            background-color: #f44336;
+            color: white;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #e8491d;
+            color: #ffffff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #c73d16;
+        }
+
+        .btn-secondary {
+            background: #35424a;
+        }
+
+        .btn-secondary:hover {
+            background: #2c363d;
+        }
+
+        /* Footer */
+        footer {
+            padding: 20px;
+            color: #ffffff;
+            background-color: #e8491d;
+            text-align: center;
+        }
+
+        /* Media Queries */
+        @media(max-width: 768px) {
+
+            header #branding,
+            header nav,
+            header nav li {
+                float: none;
+                text-align: center;
+                width: 100%;
+            }
+
+            header {
+                padding-bottom: 20px;
+            }
+
+            .campaign-table {
+                font-size: 0.8rem;
+            }
+
+            .campaign-table th,
+            .campaign-table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1><span class="highlight">Donor</span> Connect Admin</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="admin.html">Dashboard</a></li>
+                    <li class="current"><a href="admin-campaigns.html">Campaigns</a></li>
+                    <li><a href="admin-reports.html">Reports</a></li>
+                    <li><a href="login.html">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h2>Campaign Management</h2>
+            <div style="text-align: right; margin-bottom: 1rem;">
+                <a href="#" class="btn" id="addCampaignBtn">Add New Campaign</a>
+            </div>
+            <table class="campaign-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Goal</th>
+                        <th>Raised</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="campaignTableBody">
+                    <!-- Campaign data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <p>Donor Connect &copy; 2024</p>
+    </footer>
+
+    <script>
+        // Dummy campaign data
+        const campaigns = [
+            { id: 1, name: "Clean Water Initiative", goal: 50000, raised: 30000, startDate: "2024-01-01", endDate: "2024-12-31", status: "active" },
+            { id: 2, name: "Education for All", goal: 75000, raised: 45000, startDate: "2024-02-15", endDate: "2024-08-15", status: "active" },
+            { id: 3, name: "Community Garden Project", goal: 25000, raised: 25000, startDate: "2023-06-01", endDate: "2023-12-31", status: "inactive" },
+        ];
+
+        // Function to populate campaign table
+        function populateCampaignTable() {
+            const tableBody = document.getElementById('campaignTableBody');
+            tableBody.innerHTML = '';
+
+            campaigns.forEach(campaign => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${campaign.id}</td>
+                    <td>${campaign.name}</td>
+                    <td>$${campaign.goal.toLocaleString()}</td>
+                    <td>$${campaign.raised.toLocaleString()}</td>
+                    <td>${campaign.startDate}</td>
+                    <td>${campaign.endDate}</td>
+                    <td><span class="status-badge status-${campaign.status}">${campaign.status}</span></td>
+                    <td>
+                        <a href="#" class="btn btn-secondary btn-small">Edit</a>
+                        <a href="#" class="btn btn-secondary btn-small">Delete</a>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Populate table when the page loads
+        window.onload = populateCampaignTable;
+
+        // Add event listener for Add New Campaign button
+        document.getElementById('addCampaignBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Add New Campaign functionality to be implemented');
+        });
+    </script>
+</body>
+
+</html>

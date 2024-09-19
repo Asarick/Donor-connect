@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Connect - Login & Welcome</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 1s ease-out;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            filter: blur(8px);
+            z-index: -1;
+        }
+
+        .page-container {
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .landing-content {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: slideInLeft 0.5s ease-out;
+        }
+
+        .login-container {
+            flex: 1;
+            padding: 2rem;
+            background-color: #fff;
+            transform: translateX(50px);
+            opacity: 0;
+            animation: slideInRight 0.5s ease-out 0.3s forwards;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #35424a;
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-text {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .feature-list {
+            list-style-type: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            color: #e8491d;
+            position: absolute;
+            left: 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: #e8491d;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .cta-button:hover {
+            background-color: #d13d0f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(232, 73, 29, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 0.75rem;
+            cursor: pointer;
+            background-color: #f4f4f4;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .tab.active {
+            background-color: #e8491d;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #35424a;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            transition: border-color 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #e8491d;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #e8491d;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(232, 73, 29, 0.3);
+        }
+
+        .btn:hover {
+            background-color: #d13d0f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(232, 73, 29, 0.4);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-footer a {
+            color: #e8491d;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .form-footer a:hover {
+            color: #d13d0f;
+            text-decoration: underline;
+        }
+
+        .admin-option {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .shake {
+            animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
+        }
+
+        @keyframes shake {
+
+            10%,
+            90% {
+                transform: translate3d(-1px, 0, 0);
+            }
+
+            20%,
+            80% {
+                transform: translate3d(2px, 0, 0);
+            }
+
+            30%,
+            50%,
+            70% {
+                transform: translate3d(-4px, 0, 0);
+            }
+
+            40%,
+            60% {
+                transform: translate3d(4px, 0, 0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                flex-direction: column;
+            }
+
+            .landing-content,
+            .login-container {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-container">
+        <div class="landing-content">
+            <h1 class="title">Welcome to Donor Connect</h1>
+            <p class="welcome-text">Join our community of generous donors and make a difference today!</p>
+            <ul class="feature-list">
+                <li>Support various charitable causes</li>
+                <li>Track your donations and impact</li>
+                <li>Connect with like-minded individuals</li>
+                <li>Receive tax deduction receipts</li>
+            </ul>
+            <a href="#" class="cta-button">Learn More</a>
+        </div>
+        <div class="login-container">
+            <div id="tabs" class="tabs">
+                <div class="tab active" onclick="switchTab('login')">LOGIN</div>
+                <div class="tab" onclick="switchTab('register')">REGISTER</div>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="remember"> Remember me
+                    </label>
+                </div>
+                <button type="submit" class="btn">SIGN IN</button>
+                <div class="form-footer">
+                    <a href="#">Forgot password?</a>
+                    <p>Not a member? <a href="#" onclick="switchTab('register')">Register</a></p>
+                </div>
+            </form>
+            <div class="admin-option">
+                <a href="#" onclick="switchToAdminLogin()">Are you an admin?</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isAdminLogin = false;
+        const adminEmail = "donorconnect@gmail.com";
+        const adminPassword = "welcome2020";
+
+        function switchTab(tab) {
+            if (isAdminLogin) return;
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            document.querySelector(`.tab:nth-child(${tab === 'login' ? '1' : '2'}`).classList.add('active');
+
+            const form = document.getElementById('loginForm');
+            form.classList.add('shake');
+            setTimeout(() => form.classList.remove('shake'), 820);
+
+            if (tab === 'register') {
+                form.innerHTML = `
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="terms" required> I agree to the terms and conditions
+                        </label>
+                    </div>
+                    <button type="submit" class="btn">REGISTER</button>
+                    <div class="form-footer">
+                        <p>Already a member? <a href="#" onclick="switchTab('login')">Login</a></p>
+                    </div>
+                `;
+            } else {
+                form.innerHTML = `
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="remember"> Remember me
+                        </label>
+                    </div>
+                    <button type="submit" class="btn">SIGN IN</button>
+                    <div class="form-footer">
+                        <a href="#">Forgot password?</a>
+                        <p>Not a member? <a href="#" onclick="switchTab('register')">Register</a></p>
+                    </div>
+                `;
+            }
+            attachFormSubmitListener();
+        }
+
+        function switchToAdminLogin() {
+            isAdminLogin = true;
+            const loginContainer = document.querySelector('.login-container');
+            loginContainer.innerHTML = `
+                <h2 class="title">Admin Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Admin Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Admin Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn">ADMIN SIGN IN</button>
+                </form>
+                <div class="admin-option">
+                    <a href="#" onclick="switchToDonorLogin()">Back to Donor Login</a>
+                </div>
+            `;
+            attachFormSubmitListener();
+        }
+
+        function switchToDonorLogin() {
+            isAdminLogin = false;
+            const loginContainer = document.querySelector('.login-container');
+            loginContainer.innerHTML = `
+                <div id="tabs" class="tabs">
+                    <div class="tab active" onclick="switchTab('login')">LOGIN</div>
+                    <div class="tab" onclick="switchTab('register')">REGISTER</div>
+                </div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="remember"> Remember me
+                        </label>
+                    </div>
+                    <button type="submit" class="btn">SIGN IN</button>
+                    <div class="form-footer">
+                        <a href="#">Forgot password?</a>
+                        <p>Not a member? <a href="#" onclick="switchTab('register')">Register</a></p>
+                    </div>
+                </form>
+                <div class="admin-option">
+                    <a href="#" onclick="switchToAdminLogin()">Are you an admin?</a>
+                </div>
+            `;
+            attachFormSubmitListener();
+        }
+
+        function attachFormSubmitListener() {
+            const form = document.getElementById('loginForm');
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+                
+                if (isAdminLogin) {
+                    if (data.email === adminEmail && data.password === adminPassword) {
+                        alert('Admin login successful!');
+                    } else {
+                        alert('Invalid admin credentials. Please try again.');
+                    }
+                } else {
+                    // Here you would typically check if the user exists in your database
+                    // For this example, we'll simulate a check
+                    if (data.email && data.password) {
+                        alert('Login successful! Welcome back!');
+                    } else {
+                        alert('Account not found. Please sign up first.');
+                        switchTab('register');
+                    }
+                }
+            });
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function () {
+            attachFormSubmitListener();
+        });
+    </script>
+</body>
+</html>

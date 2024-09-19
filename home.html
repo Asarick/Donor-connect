@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Home Page</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            height: 100%;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            background: url('do-not-use-this-image-3718788_1280.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            overflow: hidden;
+        }
+        /* Header Styles */
+        header {
+            background: rgba(53, 66, 74, 0.9);
+            color: #ffffff;
+            padding: 1rem 0;
+            border-bottom: #e8491d 3px solid;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            transition: background 0.3s ease;
+        }
+        header.scrolled {
+            background: rgba(53, 66, 74, 0.95);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        header a {
+            color: #ffffff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+        header li {
+            display: inline;
+            padding: 0 20px;
+        }
+        header #branding {
+            float: left;
+        }
+        header #branding h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+        header nav {
+            float: right;
+            margin-top: 10px;
+        }
+        header .highlight, header .current a {
+            color: #e8491d;
+            font-weight: bold;
+        }
+        header a:hover {
+            color: #e8491d;
+        }
+        /* Main Content */
+        main {
+            flex: 1 0 auto;
+            padding-top: 80px; /* Account for fixed header */
+        }
+        /* Showcase */
+        #showcase {
+            height: calc(100vh - 80px);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #showcase .showcase-content {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2rem;
+            border-radius: 10px;
+            animation: fadeIn 1s ease-out;
+        }
+        #showcase h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: slideInFromLeft 1s ease-out;
+        }
+        #showcase p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            animation: slideInFromRight 1s ease-out;
+        }
+        #showcase .cta-button {
+            display: inline-block;
+            font-size: 1.2rem;
+            color: #ffffff;
+            background-color: #e8491d;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            animation: pulseAnimation 2s infinite;
+        }
+        #showcase .cta-button:hover {
+            background-color: #c73d16;
+        }
+        /* About */
+        #about {
+            padding: 4rem 0;
+            background: rgba(53, 66, 74, 0.9);
+            color: #ffffff;
+        }
+        #about h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+        }
+        #about p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        /* Boxes */
+        #boxes {
+            padding: 4rem 0;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        #boxes .box {
+            text-align: center;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        #boxes .box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        #boxes .box img {
+            width: 100px;
+            margin-bottom: 1rem;
+        }
+        #boxes .box h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #e8491d;
+        }
+        /* Footer */
+        footer {
+            padding: 1rem;
+            color: #ffffff;
+            background-color: rgba(232, 73, 29, 0.9);
+            text-align: center;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal.show {
+            opacity: 1;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: scale(0.7);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .modal.show .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        .close:hover,
+        .close:focus {
+            color: #e8491d;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInFromLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideInFromRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes pulseAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        /* Media Queries */
+        @media(max-width: 768px) {
+            header #branding,
+            header nav,
+            header nav li {
+                float: none;
+                text-align: center;
+                width: 100%;
+            }
+            header {
+                padding-bottom: 20px;
+            }
+            #showcase {
+                height: auto;
+                padding: 2rem 0;
+            }
+            #showcase h1 {
+                font-size: 2.5rem;
+            }
+            #showcase p {
+                font-size: 1rem;
+            }
+            #boxes .box {
+                width: 100%;
+                float: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="main-header">
+        <div class="container">
+            <div id="branding">
+                <h1><span class="highlight">Donor</span> Connect</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li class="current"><a href="home.html">Home</a></li>
+                    <li><a href="donation.html">Donate</a></li>
+                    <li><a href="#" id="contact-link">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="showcase">
+            <div class="showcase-content">
+                <h1>Make a Difference Today</h1>
+                <p>Your generosity can change lives. Join us in our mission to create a better world.</p>
+                <a href="#" class="cta-button" id="donate-button">Donate Now</a>
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="container">
+                <h2>About Us</h2>
+                <p>Donor Connect is a platform dedicated to connecting generous donors with meaningful causes. We believe in the power of collective action and the impact that each individual can make. Our mission is to create a world where everyone has the opportunity to contribute to positive change, no matter how big or small their donation may be.</p>
+            </div>
+        </section>
+
+        <section id="boxes">
+            <div class="container">
+                <div class="box">
+                    <h3>Our Campaigns</h3>
+                    <p>Explore our diverse range of campaigns and find a cause that resonates with you.</p>
+                </div>
+                <div class="box">
+                    <h3>Our Impact</h3>
+                    <p>See the real-world difference your donations are making in communities around the globe.</p>
+                </div>
+                <div class="box">
+                    <h3>Get Involved</h3>
+                    <p>Discover ways to contribute beyond donations, including volunteering and spreading awareness.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Donor Connect &copy; 2024</p>
+    </footer>
+
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Contact Us</h2>
+            <p>We'd love to hear from you! Please fill out the form below and we'll get back to you as soon as possible.</p>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="name">Your Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Your Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Your Message:</label>
+                    <textarea id="message" name="message" rows="4" required></textarea>
+                </div>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('main-header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Modal functionality
+        const modal = document.getElementById("contactModal");
+        const contactLink = document.getElementById("contact-link");
+        const closeBtn = document.getElementsByClassName("close")[0];
+
+        contactLink.onclick = function(e) {
+            e.preventDefault();
+            modal.style.display = "block";
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+        }
+
+        closeBtn.onclick = function() {
+            closeModal();
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        function closeModal() {
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = "none";
+            }, 300);
+        }
+
+        // Form submission (placeholder)
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+            closeModal();
+        });
+
+        // Donation button
+        document.getElementById('donate-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'donation.html';
+        });
+    </script>
+</body>
+</html>
