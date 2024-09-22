@@ -274,6 +274,17 @@
             }
         }
 
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            background-color: #f44336;
+            color: white;
+            border-radius: 5px;
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .page-container {
                 flex-direction: column;
@@ -331,10 +342,13 @@
         </div>
     </div>
 
+    <div id="notification" class="notification"></div>
+
     <script>
         let isAdminLogin = false;
         const adminEmail = "donorconnect@gmail.com";
         const adminPassword = "welcome2020";
+        let registeredUsers = [];
 
         function switchTab(tab) {
             if (isAdminLogin) return;
@@ -465,22 +479,71 @@
                 const data = Object.fromEntries(formData.entries());
                 
                 if (isAdminLogin) {
-                    if (data.email === adminEmail && data.password === adminPassword) {
-                        alert('Admin login successful!');
-                    } else {
-                        alert('Invalid admin credentials. Please try again.');
-                    }
+                    handleAdminLogin(data);
                 } else {
-                    // Here you would typically check if the user exists in your database
-                    // For this example, we'll simulate a check
-                    if (data.email && data.password) {
-                        alert('Login successful! Welcome back!');
+                    if (form.querySelector('button').textContent === 'REGISTER') {
+                        handleRegistration(data);
                     } else {
-                        alert('Account not found. Please sign up first.');
-                        switchTab('register');
+                        handleDonorLogin(data);
                     }
                 }
             });
+        }
+
+        function handleAdminLogin(data) {
+            if (data.email === adminEmail && data.password === adminPassword) {
+                showNotification('Admin login successful!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'admin.html';
+                }, 1500);
+            } else {
+                showNotification('Invalid admin credentials. Please try again.', 'error');
+            }
+        }
+
+       
+        function handleRegistration(data) {
+            if (data.password !== data.confirmPassword) {
+                showNotification('Passwords do not match. Please try again.', 'error');
+                return;
+            }
+            if (!data.terms) {
+                showNotification('Please agree to the terms and conditions.', 'error');
+                return;
+            }
+            const newUser = {
+                name: data.name,
+                email: data.email,
+                password: data.password
+            };
+            registeredUsers.push(newUser);
+            showNotification('Account created successfully! Redirecting to home page...', 'success');
+            setTimeout(() => {
+                window.location.href = 'home.html'; // Redirect to home page
+            }, 1500);
+        }
+
+
+        function handleDonorLogin(data) {
+            const user = registeredUsers.find(u => u.email === data.email && u.password === data.password);
+            if (user) {
+                showNotification('Login successful! Redirecting to home page...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'home.html';
+                }, 1500);
+            } else {
+                showNotification('Invalid credentials. Please try again.', 'error');
+            }
+        }
+
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.backgroundColor = type === 'success' ? '#4CAF50' : '#f44336';
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 10000);
         }
 
         // Initialize the page

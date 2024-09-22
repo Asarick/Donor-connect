@@ -39,11 +39,12 @@
             position: fixed;
             width: 100%;
             z-index: 1000;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
         }
         header.scrolled {
             background: rgba(53, 66, 74, 0.95);
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 0.5rem 0;
         }
         header a {
             color: #ffffff;
@@ -62,6 +63,10 @@
         header #branding h1 {
             margin: 0;
             font-size: 1.8em;
+            transition: all 0.3s ease;
+        }
+        header.scrolled #branding h1 {
+            font-size: 1.5em;
         }
         header nav {
             float: right;
@@ -86,7 +91,7 @@
             margin-bottom: 2rem;
             color: #35424a;
             font-size: 2.5rem;
-            animation: fadeIn 1s ease-out;
+            animation: fadeInDown 1s ease-out;
         }
         /* Campaign Grid */
         .campaign-grid {
@@ -100,16 +105,26 @@
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        .campaign-card.show {
+            opacity: 1;
+            transform: translateY(0);
         }
         .campaign-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-10px) scale(1.03);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
         .campaign-card img {
             width: 100%;
             height: 200px;
             object-fit: cover;
+            transition: all 0.3s ease;
+        }
+        .campaign-card:hover img {
+            transform: scale(1.1);
         }
         .campaign-content {
             padding: 1.5rem;
@@ -135,7 +150,7 @@
             height: 100%;
             background: #e8491d;
             width: 0;
-            transition: width 0.5s ease-in-out;
+            transition: width 1s ease-in-out;
         }
         .campaign-stats {
             display: flex;
@@ -172,7 +187,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease;
+            transition: all 0.3s ease;
             font-size: 1rem;
             font-weight: bold;
             text-transform: uppercase;
@@ -247,7 +262,7 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
         }
         input[type="text"]:focus,
         input[type="number"]:focus,
@@ -256,6 +271,7 @@
         textarea:focus {
             border-color: #e8491d;
             outline: none;
+            box-shadow: 0 0 5px rgba(232, 73, 29, 0.5);
         }
         button[type="submit"] {
             display: block;
@@ -266,10 +282,11 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
         }
         button[type="submit"]:hover {
             background: #c73d16;
+            transform: scale(1.05);
         }
         /* Footer */
         footer {
@@ -283,9 +300,33 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        @keyframes fadeInDown {
+            from { 
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
         @keyframes slideInFromBottom {
             from { transform: translateY(50px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
+        }
+        /* Loading indicator */
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #e8491d;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         /* Media Queries */
         @media(max-width: 768px) {
@@ -318,8 +359,9 @@
             <nav>
                 <ul>
                     <li><a href="home.html">Home</a></li>
-                    <li class="current"><a href="donation.html">Donate</a></li>
-                    <li><a href="#" id="contact-link">Contact</a></li>
+                    <li class="current"><a href="Donate.html">Donate</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="login.html">Logout</a></li>
                 </ul>
             </nav>
         </div>
@@ -328,6 +370,7 @@
     <main>
         <div class="container">
             <h2>Active Campaigns</h2>
+            <div id="loader" class="loader"></div>
             <div class="campaign-grid" id="campaignGrid">
                 <!-- Campaign cards will be dynamically inserted here -->
             </div>
@@ -391,7 +434,7 @@
     </div>
 
     <footer>
-        <p>Donor Connect &copy; 2024</p>
+        <p>Donor Connect &copy; 2024 | All Rights Reserved. Done by Tracy Wangui</p>
     </footer>
 
     <script>
@@ -399,121 +442,122 @@
         window.addEventListener('scroll', function() {
             const header = document.getElementById('main-header');
             if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-
-        // Function to create campaign cards
-        function createCampaignCard(campaign) {
-            const progressPercentage = (campaign.currentAmount / campaign.goalAmount) * 100;
-
-            return `
-                <div class="campaign-card" style="animation: slideInFromBottom 0.5s ease-out ${campaign.id * 0.1}s both;">
-                    <img src="${campaign.posterUrl}" alt="${campaign.title}">
-                    <div class="campaign-content">
-                        <h3 class="campaign-title">${campaign.title}</h3>
-                        <p class="campaign-description">${campaign.description}</p>
-                        <div class="campaign-progress">
-                            <div class="progress-bar" style="width: ${progressPercentage}%"></div>
-                        </div>
-                        <div class="campaign-stats">
-                            <span>$${campaign.currentAmount.toLocaleString()} raised</span>
-                            <span>Goal: $${campaign.goalAmount.toLocaleString()}</span>
-                        </div>
-                        <p class="campaign-objective"><strong>Objective:</strong> ${campaign.objective}</p>
-                        <div class="campaign-achievements">
-                            <h4>Achievements:</h4>
-                            <ul>
-                                ${campaign.achievements.map(achievement => `<li>${achievement}</li>`).join('')}
-                            </ul>
-                        </div>
-                        <button class="donate-btn" onclick="openDonationModal('${campaign.id}')">Donate Now</button>
-                        </div>
-            </div>
-        `;
-    }
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
 
     // Sample campaign data
     const campaigns = [
         {
             id: 1,
-            title: "Feed the Hungry",
-            description: "Help us provide meals to those in need in our community.",
-            posterUrl: "/api/placeholder/400/200",
-            currentAmount: 15000,
-            goalAmount: 50000,
-            objective: "Provide 10,000 meals to homeless individuals",
+            title: "Clean Water for Rural Communities",
+            description: "Help us provide clean water to rural communities in need.",
+            image: "/api/placeholder/300/200",
+            progress: 75,
+            goal: 10000,
+            raised: 7500,
+            objective: "To install 50 water purification systems in rural villages.",
             achievements: [
-                "Served 5,000 meals in the last month",
-                "Partnered with 10 local restaurants",
-                "Recruited 50 new volunteers"
+                "Installed 30 water purification systems",
+                "Trained 100 community members on system maintenance",
+                "Reduced waterborne diseases by 40% in target areas"
             ]
         },
         {
             id: 2,
             title: "Education for All",
-            description: "Support underprivileged children with school supplies and tuition.",
-            posterUrl: "/api/placeholder/400/200",
-            currentAmount: 25000,
-            goalAmount: 100000,
-            objective: "Sponsor education for 100 children",
+            description: "Support our mission to bring quality education to underprivileged children.",
+            image: "/api/placeholder/300/200",
+            progress: 60,
+            goal: 15000,
+            raised: 9000,
+            objective: "To build 5 new classrooms and provide school supplies for 500 students.",
             achievements: [
-                "Provided scholarships to 50 students",
-                "Distributed 1000 school supply kits",
-                "Renovated 5 rural schools"
+                "Built 3 new classrooms",
+                "Provided school supplies for 300 students",
+                "Increased school attendance by 25% in target areas"
             ]
         },
-        {
-            id: 3,
-            title: "Clean Water Initiative",
-            description: "Bring clean, safe drinking water to rural communities.",
-            posterUrl: "/api/placeholder/400/200",
-            currentAmount: 75000,
-            goalAmount: 200000,
-            objective: "Install 50 water purification systems",
-            achievements: [
-                "Installed 20 water wells",
-                "Provided clean water to 10,000 people",
-                "Conducted 30 water safety workshops"
-            ]
-        }
+        // Add more campaign objects as needed
     ];
 
-    // Populate campaign grid
-    const campaignGrid = document.getElementById('campaignGrid');
-    campaigns.forEach(campaign => {
-        campaignGrid.innerHTML += createCampaignCard(campaign);
-    });
-
-    // Modal functionality
-    const modal = document.getElementById('donationModal');
-    const closeBtn = document.getElementsByClassName('close')[0];
-    const donationForm = document.getElementById('donationForm');
-    const donationType = document.getElementById('donationType');
-    const moneyDonation = document.getElementById('moneyDonation');
-    const itemDonation = document.getElementById('itemDonation');
-
-    function openDonationModal(campaignId) {
-        modal.style.display = 'block';
-        setTimeout(() => modal.classList.add('show'), 10);
-        donationForm.dataset.campaignId = campaignId;
+    // Function to create campaign cards
+    function createCampaignCard(campaign) {
+        const card = document.createElement('div');
+        card.className = 'campaign-card';
+        card.innerHTML = `
+            <img src="${campaign.image}" alt="${campaign.title}">
+            <div class="campaign-content">
+                <h3 class="campaign-title">${campaign.title}</h3>
+                <p class="campaign-description">${campaign.description}</p>
+                <div class="campaign-progress">
+                    <div class="progress-bar" style="width: ${campaign.progress}%"></div>
+                </div>
+                <div class="campaign-stats">
+                    <span>Raised: KES ${campaign.raised}</span>
+                    <span>Goal: KES ${campaign.goal}</span>
+                </div>
+                <p class="campaign-objective">${campaign.objective}</p>
+                <div class="campaign-achievements">
+                    <h4>Achievements:</h4>
+                    <ul>
+                        ${campaign.achievements.map(achievement => `<li>${achievement}</li>`).join('')}
+                    </ul>
+                </div>
+                <button class="donate-btn" data-campaign-id="${campaign.id}">Donate Now</button>
+            </div>
+        `;
+        return card;
     }
 
-    closeBtn.onclick = function() {
+    // Function to populate the campaign grid
+    function populateCampaignGrid() {
+        const grid = document.getElementById('campaignGrid');
+        const loader = document.getElementById('loader');
+
+        // Show loader
+        loader.style.display = 'block';
+
+        // Simulate API call delay
+        setTimeout(() => {
+            campaigns.forEach(campaign => {
+                const card = createCampaignCard(campaign);
+                grid.appendChild(card);
+                // Trigger animation after a short delay
+                setTimeout(() => card.classList.add('show'), 100);
+            });
+
+            // Hide loader
+            loader.style.display = 'none';
+
+            // Add event listeners to donate buttons
+            document.querySelectorAll('.donate-btn').forEach(btn => {
+                btn.addEventListener('click', openDonationModal);
+            });
+        }, 1000); // Simulated 1-second delay
+    }
+
+    // Function to open donation modal
+    function openDonationModal(event) {
+        const campaignId = event.target.getAttribute('data-campaign-id');
+        const modal = document.getElementById('donationModal');
+        modal.style.display = 'block';
+        setTimeout(() => modal.classList.add('show'), 10);
+    }
+
+    // Function to close donation modal
+    function closeDonationModal() {
+        const modal = document.getElementById('donationModal');
         modal.classList.remove('show');
         setTimeout(() => modal.style.display = 'none', 300);
     }
 
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.classList.remove('show');
-            setTimeout(() => modal.style.display = 'none', 300);
-        }
-    }
-
-    donationType.addEventListener('change', function() {
+    // Event listener for donation type selection
+    document.getElementById('donationType').addEventListener('change', function() {
+        const moneyDonation = document.getElementById('moneyDonation');
+        const itemDonation = document.getElementById('itemDonation');
         if (this.value === 'money') {
             moneyDonation.style.display = 'block';
             itemDonation.style.display = 'none';
@@ -526,23 +570,26 @@
         }
     });
 
-    donationForm.addEventListener('submit', function(e) {
+    // Event listener for donation form submission
+    document.getElementById('donationForm').addEventListener('submit', function(e) {
         e.preventDefault();
         // Here you would typically send the form data to a server
-        // For this example, we'll just log it to the console
-        console.log('Form submitted for campaign:', this.dataset.campaignId);
-        console.log('Form data:', new FormData(this));
         alert('Thank you for your donation!');
-        modal.classList.remove('show');
-        setTimeout(() => modal.style.display = 'none', 300);
-        this.reset();
+        closeDonationModal();
     });
 
-    // Contact link functionality
-    document.getElementById('contact-link').addEventListener('click', function(e) {
-        e.preventDefault();
-        alert('Contact page coming soon!');
+    // Close modal when clicking outside or on close button
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('donationModal');
+        if (event.target === modal) {
+            closeDonationModal();
+        }
     });
+
+    document.querySelector('.close').addEventListener('click', closeDonationModal);
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', populateCampaignGrid);
 </script>
 </body>
 </html>

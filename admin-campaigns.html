@@ -105,6 +105,10 @@
             font-weight: bold;
         }
 
+        .campaign-table tr {
+            transition: background-color 0.3s ease;
+        }
+
         .campaign-table tr:hover {
             background-color: #f5f5f5;
         }
@@ -122,8 +126,13 @@
             color: white;
         }
 
-        .status-inactive {
-            background-color: #f44336;
+        .status-suspended {
+            background-color: #FFA500;
+            color: white;
+        }
+
+        .status-completed {
+            background-color: #2196F3;
             color: white;
         }
 
@@ -137,11 +146,15 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, transform 0.1s ease;
         }
 
         .btn:hover {
             background: #c73d16;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
         }
 
         .btn-secondary {
@@ -152,6 +165,11 @@
             background: #2c363d;
         }
 
+        .btn-small {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+
         /* Footer */
         footer {
             padding: 20px;
@@ -160,9 +178,18 @@
             text-align: center;
         }
 
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
         /* Media Queries */
         @media(max-width: 768px) {
-
             header #branding,
             header nav,
             header nav li {
@@ -208,7 +235,7 @@
         <div class="container">
             <h2>Campaign Management</h2>
             <div style="text-align: right; margin-bottom: 1rem;">
-                <a href="#" class="btn" id="addCampaignBtn">Add New Campaign</a>
+                <a href="admin-new-campaign.html" class="btn" id="addCampaignBtn">Add New Campaign</a>
             </div>
             <table class="campaign-table">
                 <thead>
@@ -239,7 +266,8 @@
         const campaigns = [
             { id: 1, name: "Clean Water Initiative", goal: 50000, raised: 30000, startDate: "2024-01-01", endDate: "2024-12-31", status: "active" },
             { id: 2, name: "Education for All", goal: 75000, raised: 45000, startDate: "2024-02-15", endDate: "2024-08-15", status: "active" },
-            { id: 3, name: "Community Garden Project", goal: 25000, raised: 25000, startDate: "2023-06-01", endDate: "2023-12-31", status: "inactive" },
+            { id: 3, name: "Community Garden Project", goal: 25000, raised: 25000, startDate: "2023-06-01", endDate: "2023-12-31", status: "completed" },
+            { id: 4, name: "Homeless Shelter Support", goal: 100000, raised: 60000, startDate: "2024-03-01", endDate: "2024-09-30", status: "suspended" },
         ];
 
         // Function to populate campaign table
@@ -249,6 +277,7 @@
 
             campaigns.forEach(campaign => {
                 const row = document.createElement('tr');
+                row.classList.add('fade-in');
                 row.innerHTML = `
                     <td>${campaign.id}</td>
                     <td>${campaign.name}</td>
@@ -258,22 +287,61 @@
                     <td>${campaign.endDate}</td>
                     <td><span class="status-badge status-${campaign.status}">${campaign.status}</span></td>
                     <td>
-                        <a href="#" class="btn btn-secondary btn-small">Edit</a>
-                        <a href="#" class="btn btn-secondary btn-small">Delete</a>
+                        ${getActionButtons(campaign)}
                     </td>
                 `;
                 tableBody.appendChild(row);
             });
+
+            // Add event listeners to action buttons
+            document.querySelectorAll('.action-btn').forEach(btn => {
+                btn.addEventListener('click', handleActionClick);
+            });
+        }
+
+        // Function to get action buttons based on campaign status
+        function getActionButtons(campaign) {
+            if (campaign.status === 'active') {
+                return `
+                    <button class="btn btn-secondary btn-small action-btn" data-action="suspend" data-id="${campaign.id}">Suspend</button>
+                    <button class="btn btn-secondary btn-small action-btn" data-action="complete" data-id="${campaign.id}">Mark Completed</button>
+                `;
+            } else if (campaign.status === 'suspended') {
+                return `
+                    <button class="btn btn-secondary btn-small action-btn" data-action="unsuspend" data-id="${campaign.id}">Unsuspend</button>
+                `;
+            } else {
+                return 'No actions available';
+            }
+        }
+
+        // Function to handle action button clicks
+        function handleActionClick(e) {
+            const action = e.target.dataset.action;
+            const campaignId = parseInt(e.target.dataset.id);
+            const campaign = campaigns.find(c => c.id === campaignId);
+
+            if (campaign) {
+                switch (action) {
+                    case 'suspend':
+                        campaign.status = 'suspended';
+                        break;
+                    case 'unsuspend':
+                        campaign.status = 'active';
+                        break;
+                    case 'complete':
+                        campaign.status = 'completed';
+                        break;
+                }
+                populateCampaignTable();
+            }
         }
 
         // Populate table when the page loads
         window.onload = populateCampaignTable;
 
-        // Add event listener for Add New Campaign button
-        document.getElementById('addCampaignBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('Add New Campaign functionality to be implemented');
-        });
+        // Remove event listener for Add New Campaign button
+        // The button now directly links to admin-new-campaign.html
     </script>
 </body>
 
